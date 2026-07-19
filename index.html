@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDELdATlp_a7C8AuWFrCZ8t2gDb8S0W_F8",
@@ -33,7 +33,8 @@
             db: firebaseDb,
             doc,
             getDoc,
-            setDoc
+            setDoc,
+            onSnapshot
         };
     </script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -542,6 +543,18 @@
             }
         };
 
+        const listenRemoteData = (onData) => {
+            if (!db) return () => { };
+            const docRef = window.firebaseModule.doc(db, 'tailorSite', 'data');
+            return window.firebaseModule.onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    onData(snapshot.data());
+                }
+            }, (err) => {
+                console.warn('Firestore listener failed:', err);
+            });
+        };
+
         function loadData() {
             try {
                 const raw = localStorage.getItem('tailorData');
@@ -556,6 +569,10 @@
         function saveData(data) {
             localStorage.setItem('tailorData', JSON.stringify(data));
             saveRemoteData(data);
+        }
+
+        function saveLocalData(data) {
+            localStorage.setItem('tailorData', JSON.stringify(data));
         }
 
         function loadPassword() {
@@ -579,16 +596,26 @@
             };
 
             useEffect(() => {
-                const syncRemoteData = async () => {
-                    if (isLoaded) return;
+                if (isLoaded) return;
+
+                let unsubscribe = () => { };
+                const initRemote = async () => {
                     const remote = await loadRemoteData();
                     if (remote) {
                         setData(remote);
-                        saveData(remote);
+                        saveLocalData(remote);
                     }
+                    unsubscribe = listenRemoteData((remoteData) => {
+                        if (remoteData) {
+                            setData(remoteData);
+                            saveLocalData(remoteData);
+                        }
+                    });
                     setIsLoaded(true);
                 };
-                syncRemoteData();
+
+                initRemote();
+                return () => unsubscribe();
             }, [isLoaded]);
 
             const updateData = (newData) => {
