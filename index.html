@@ -756,11 +756,26 @@
             return React.createElement('div', { className: 'toast' }, toast);
         };
 
+        const normalizeWhatsAppNumber = (number) => {
+            if (!number) return '';
+            const digits = number.replace(/\D/g, '');
+            if (digits.startsWith('00')) {
+                return digits.slice(2);
+            }
+            if (digits.startsWith('0') && digits.length === 11) {
+                return '92' + digits.slice(1);
+            }
+            if (digits.length === 10) {
+                return '92' + digits;
+            }
+            return digits;
+        };
+
         // ─── WHATSAPP BUTTON ──────────────────────────────────────────────────
         const WhatsAppButton = () => {
             const { data } = useApp();
-            const num = data.whatsapp || '03096893531';
-            const href = `https://wa.me/${num.replace(/\D/g, '')}?text=Hello!%20I%27m%20interested%20in%20your%20tailoring%20services.`;
+            const cleanNum = normalizeWhatsAppNumber(data.whatsapp || '03096893531');
+            const href = `https://wa.me/${cleanNum}?text=Hello!%20I%27m%20interested%20in%20your%20tailoring%20services.`;
             return React.createElement('a', {
                 href,
                 target: '_blank',
@@ -886,7 +901,7 @@
                                     className: 'bg-indigo-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200'
                                 }, 'Explore Services'),
                                 React.createElement('a', {
-                                    href: `https://wa.me/${data.whatsapp.replace(/\D/g, '')}`,
+                                    href: `https://wa.me/${normalizeWhatsAppNumber(data.whatsapp || '03096893531')}`,
                                     target: '_blank',
                                     rel: 'noopener noreferrer',
                                     className: 'bg-white text-gray-800 px-8 py-3 rounded-full font-semibold border border-gray-200 hover:border-indigo-300 transition shadow-sm'
@@ -1045,8 +1060,7 @@
         const Contact = () => {
             const { data } = useApp();
             const c = data.contact;
-            const whatsappNum = data.whatsapp || '03096893531';
-            const cleanNum = whatsappNum.replace(/\D/g, '');
+            const cleanNum = normalizeWhatsAppNumber(data.whatsapp || '03096893531');
 
             return React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
                 React.createElement('div', { className: 'text-center mb-12' },
