@@ -487,10 +487,12 @@
         const AppContext = createContext();
 
         const defaultData = {
+            // bump dataVersion when you change defaults to force clients to refresh cache
+            dataVersion: 1,
             hero: {
                 title: "Stylish-Tailor",
                 subtitle: "Crafted with precision, tailored to perfection. Experience the art of custom clothing.",
-                image: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=800&h=500&fit=crop",
+                image: "assests/bespoke.png",
             },
             about: {
                 title: "About Our Tailor Shop",
@@ -498,9 +500,10 @@
                 image: "assests/about.png",
             },
             services: [
-                { id: 's1', title: "Bespoke Suits", description: "Custom-made suits tailored to your exact measurements and style preferences.", price: "$299+", image: "https://images.unsplash.com/photo-1593032465175-481c3ae4010e?w=400&h=300&fit=crop" },
-                { id: 's2', title: "Wedding Dresses", description: "Elegant bridal gowns designed and stitched with the finest lace and silk.", price: "$499+", image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=300&fit=crop" },
-                { id: 's3', title: "Alterations & Repairs", description: "Professional alterations, hemming, and repairs for all types of garments.", price: "$25+", image: "https://images.unsplash.com/photo-1589310243389-96a5483213a8?w=400&h=300&fit=crop" },
+                { id: 's1', title: "Bespoke Suits", description: "Custom-made suits tailored to your exact measurements and style preferences.", price: "16000+pkr", image: "assests/bespoke.png" },
+                { id: 's2', title: "Wedding Dresses", description: "Elegant bridal gowns designed and stitched with the finest lace and silk.", price: "15000+pkr", image: "assests/wedding.png" },
+                { id: 's3', title: "Shalwar Kameez", description: "Bring your unique style to life — tailored shalwar kameez as requested.", price: "2000+pkr", image: "assests/shalwarkamiz.png" },
+                { id: 's4', title: "Showcase", description: "More examples of our work and custom orders.", price: "See details", image: "assests/about.png" },
             ],
             gallery: [
                 "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=300&fit=crop",
@@ -560,6 +563,14 @@
                 const raw = localStorage.getItem('tailorData');
                 if (raw) {
                     const parsed = JSON.parse(raw);
+                    // If versions mismatch, replace cached data with new defaults and push defaults
+                    if (!parsed.dataVersion || parsed.dataVersion !== defaultData.dataVersion) {
+                        // overwrite local cache and return defaults so changes in code/assets take effect
+                        try { localStorage.setItem('tailorData', JSON.stringify(defaultData)); } catch (e) { }
+                        // also attempt to write to remote so other users see defaults (if allowed)
+                        try { saveRemoteData(defaultData); } catch (e) { }
+                        return defaultData;
+                    }
                     return { ...defaultData, ...parsed };
                 }
             } catch (_) { }
@@ -585,6 +596,7 @@
 
         const AppProvider = ({ children }) => {
             const [data, setData] = useState(loadData);
+            const [page, setPage] = useState('home');
             const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('tailorAdmin') === 'true');
             const [toast, setToast] = useState(null);
             const [adminPassword, setAdminPassword] = useState(loadPassword);
@@ -709,6 +721,8 @@
 
             const value = {
                 data,
+                page,
+                setPage,
                 isAdmin,
                 toast,
                 showToast,
@@ -1654,8 +1668,7 @@
 
         // ─── APP ──────────────────────────────────────────────────────────────
         const App = () => {
-            const { isAdmin } = useApp();
-            const [page, setPage] = useState('home');
+            const { isAdmin, page, setPage } = useApp();
 
             useEffect(() => {
                 // If admin and on admin page, stay there
