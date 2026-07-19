@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Stylish-Tailor</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23000' d='M25 9c-1.1 0-2 .9-2 2v12.1l-9.7 9.8c-1.6 1.6-1.6 4.2 0 5.8l2.2 2.2c1.6 1.6 4.2 1.6 5.8 0L32 31.8l15 15c1.6 1.6 4.2 1.6 5.8 0l2.2-2.2c1.6-1.6 1.6-4.2 0-5.8L39 23.1V11c0-1.1-.9-2-2-2H25zM22 51c0 1.7 1.3 3 3 3h14c1.7 0 3-1.3 3-3v-4H22v4zm-4 0h2V38.5l4.5 4.5 1.4-1.4L19.4 37h1.6v-4h-4v18z'/%3E%3C/svg%3E" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDELdATlp_a7C8AuWFrCZ8t2gDb8S0W_F8",
+            authDomain: "stylish-tailor-2adbb.firebaseapp.com",
+            projectId: "stylish-tailor-2adbb",
+            storageBucket: "stylish-tailor-2adbb.firebasestorage.app",
+            messagingSenderId: "904113601383",
+            appId: "1:904113601383:web:1608a268692595f6e54dc2",
+            measurementId: "G-NRRDKV3KZV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const firebaseDb = getFirestore(app);
+
+        window.firebaseModule = {
+            db: firebaseDb,
+            doc,
+            getDoc,
+            setDoc
+        };
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f7f7f7;
+            color: #111;
+        }
+
+        .bg-white {
+            background: #ffffff !important;
+        }
+
+        .bg-gray-50,
+        .bg-gray-100,
+        .bg-gray-200 {
+            background: #f5f5f5 !important;
+        }
+
+        .bg-indigo-600,
+        .bg-indigo-700,
+        .bg-green-500,
+        .bg-green-600 {
+            background: #111827 !important;
+            color: #f8f8f8 !important;
+        }
+
+        .bg-indigo-50,
+        .bg-indigo-100 {
+            background: #eef2ff !important;
+        }
+
+        .text-indigo-600,
+        .text-indigo-700,
+        .text-indigo-800,
+        .text-green-500,
+        .text-red-500 {
+            color: #1f2937 !important;
+        }
+
+        .text-gray-500,
+        .text-gray-600,
+        .text-gray-400,
+        .text-gray-900,
+        .text-gray-800 {
+            color: #374151 !important;
+        }
+
+        .border-gray-100,
+        .border-gray-200,
+        .border-gray-300 {
+            border-color: #d1d5db !important;
+        }
+
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl,
+        .shadow-2xl {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #f3f3f3 !important;
+            border-bottom-color: #f3f3f3 !important;
+        }
+
+        .mobile-nav-link:hover {
+            background: #1f1f1f !important;
+            color: #f3f3f3 !important;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0b0b0b 0%, #181818 100%);
+        }
+
+        .admin-btn-primary {
+            background: #f3f3f3;
+            color: #111;
+        }
+
+        .admin-btn-primary:hover {
+            background: #e5e5e5;
+        }
+
+        .admin-btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .admin-btn-success:hover {
+            background: #0f766e;
+        }
+
+        .admin-btn-danger {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .admin-btn-outline {
+            border-color: #d1d5db;
+            color: #111;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: border 0.2s;
+            background: #ffffff;
+            outline: none;
+            color: #111;
+        }
+
+        .admin-input:focus {
+            border-color: #4b5563;
+            box-shadow: 0 0 0 4px rgba(156, 163, 175, 0.2);
+        }
+
+        .toast {
+            background: #111827;
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.35);
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(17, 24, 39, 0.35);
+            transition: transform 0.25s ease;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+        }
+
+        /* bottom: 28px;
+        right: 28px;
+        z-index: 999;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #25D366;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 24px rgba(37, 211, 102, 0.4);
+        transition: transform 0.25s ease;
+        cursor: pointer;
+        border: none;
+        color: #fff;
+        } */
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+        }
+
+        .whatsapp-float svg {
+            width: 34px;
+            height: 34px;
+            fill: #fff;
+        }
+
+        .admin-badge {
+            background: #f3f4f6;
+            color: #111827;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .admin-badge:hover {
+            background: #e5e7eb;
+        }
+
+        .service-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-img {
+            border-radius: 16px;
+            object-fit: cover;
+            width: 100%;
+            height: 240px;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.02);
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: border 0.2s;
+            background: #ffffff;
+            outline: none;
+            color: #111827;
+        }
+
+        .admin-input:focus {
+            border-color: #4b5563;
+            box-shadow: 0 0 0 4px rgba(156, 163, 175, 0.2);
+        }
+
+        .admin-btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .admin-btn-primary {
+            background: #f3f3f3;
+            color: #111827;
+        }
+
+        .admin-btn-primary:hover {
+            background: #e5e5e5;
+            transform: scale(1.02);
+        }
+
+        .admin-btn-danger {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .admin-btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .admin-btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .admin-btn-success:hover {
+            background: #0f766e;
+        }
+
+        .admin-btn-outline {
+            background: transparent;
+            border: 2px solid #d1d5db;
+            color: #111827;
+        }
+
+        .admin-btn-outline:hover {
+            border-color: #4b5563;
+            color: #4b5563;
+        }
+
+        .nav-link {
+            color: #4b5563;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 8px 4px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #8b5cf6;
+            border-bottom-color: #8b5cf6;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 14px 20px;
+            font-weight: 500;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background 0.2s;
+        }
+
+        .mobile-nav-link:hover {
+            background: #f9f7fc;
+            color: #8b5cf6;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #faf8f6 0%, #f0ece6 100%);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 16px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 50;
+            backdrop-filter: blur(4px);
+        }
+
+        .mobile-menu-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 80%;
+            max-width: 320px;
+            background: #fff;
+            z-index: 60;
+            padding: 24px 20px;
+            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #374151;
+        }
+
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.5px;
+        }
+
+        .section-sub {
+            color: #4b5563;
+            font-size: 1.05rem;
+            max-width: 560px;
+        }
+
+        @media (max-width: 640px) {
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .gallery-img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useContext, createContext, useRef, useCallback, useMemo } = React;
+
+        // ─── CONTEXT ────────────────────────────────────────────────────────────
+        const AppContext = createContext();
+
+        const defaultData = {
+            hero: {
+                title: "Stylish-Tailor",
+                subtitle: "Crafted with precision, tailored to perfection. Experience the art of custom clothing.",
+                image: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=800&h=500&fit=crop",
+            },
+            about: {
+                title: "About Our Tailor Shop",
+                content: "With over 20 years of experience, we specialize in every kind style/design in women wear. From wedding suits to everyday wear, every piece is crafted with attention to detail and the finest fabrics.",
+                image: "assests/about.png",
+            },
+            services: [
+                { id: 's1', title: "Bespoke Suits", description: "Custom-made suits tailored to your exact measurements and style preferences.", price: "$299+", image: "https://images.unsplash.com/photo-1593032465175-481c3ae4010e?w=400&h=300&fit=crop" },
+                { id: 's2', title: "Wedding Dresses", description: "Elegant bridal gowns designed and stitched with the finest lace and silk.", price: "$499+", image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=300&fit=crop" },
+                { id: 's3', title: "Alterations & Repairs", description: "Professional alterations, hemming, and repairs for all types of garments.", price: "$25+", image: "https://images.unsplash.com/photo-1589310243389-96a5483213a8?w=400&h=300&fit=crop" },
+            ],
+            gallery: [
+                "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&h=300&fit=crop",
+                // "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1589310243389-96a5483213a8?w=400&h=300&fit=crop",
+                // "https://images.unsplash.com/photo-1593032465175-481c3ae4010e?w=400&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=300&fit=crop",
+            ],
+            contact: {
+                phone: "03096893531",
+                email: "raheemsubhan92@gmail.com",
+                address: "walton road 7 Street, Lahore, Pakistan",
+                hours: "Mon-Sat: 9:00 AM - 10:00 PM"
+            },
+            whatsapp: "03096893531"
+        };
+
+        const db = window.firebaseModule?.db || null;
+
+        const loadRemoteData = async () => {
+            if (!db) return null;
+            try {
+                const docRef = window.firebaseModule.doc(db, 'tailorSite', 'data');
+                const snapshot = await window.firebaseModule.getDoc(docRef);
+                return snapshot.exists() ? snapshot.data() : null;
+            } catch (err) {
+                console.warn('Firebase load failed:', err);
+                return null;
+            }
+        };
+
+        const saveRemoteData = async (data) => {
+            if (!db) return;
+            try {
+                const docRef = window.firebaseModule.doc(db, 'tailorSite', 'data');
+                await window.firebaseModule.setDoc(docRef, data);
+            } catch (err) {
+                console.warn('Firebase save failed:', err);
+            }
+        };
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem('tailorData');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    return { ...defaultData, ...parsed };
+                }
+            } catch (_) { }
+            return defaultData;
+        }
+
+        function saveData(data) {
+            localStorage.setItem('tailorData', JSON.stringify(data));
+            saveRemoteData(data);
+        }
+
+        function loadPassword() {
+            return localStorage.getItem('tailorAdminPassword') || 'raheem@109';
+        }
+
+        function savePassword(password) {
+            localStorage.setItem('tailorAdminPassword', password);
+        }
+
+        const AppProvider = ({ children }) => {
+            const [data, setData] = useState(loadData);
+            const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('tailorAdmin') === 'true');
+            const [toast, setToast] = useState(null);
+            const [adminPassword, setAdminPassword] = useState(loadPassword);
+            const [isLoaded, setIsLoaded] = useState(false);
+
+            const showToast = (msg) => {
+                setToast(msg);
+                setTimeout(() => setToast(null), 2800);
+            };
+
+            useEffect(() => {
+                const syncRemoteData = async () => {
+                    if (isLoaded) return;
+                    const remote = await loadRemoteData();
+                    if (remote) {
+                        setData(remote);
+                        saveData(remote);
+                    }
+                    setIsLoaded(true);
+                };
+                syncRemoteData();
+            }, [isLoaded]);
+
+            const updateData = (newData) => {
+                const merged = { ...data, ...newData };
+                setData(merged);
+                saveData(merged);
+                showToast('✅ Changes saved successfully!');
+            };
+
+            const updateSection = (section, values) => {
+                const merged = { ...data, [section]: { ...data[section], ...values } };
+                setData(merged);
+                saveData(merged);
+                showToast('✅ Section updated!');
+            };
+
+            const addService = (service) => {
+                const newService = { ...service, id: 's' + Date.now() };
+                const merged = { ...data, services: [...data.services, newService] };
+                setData(merged);
+                saveData(merged);
+                showToast('✅ Service added!');
+            };
+
+            const updateService = (id, updates) => {
+                const merged = {
+                    ...data,
+                    services: data.services.map(s => s.id === id ? { ...s, ...updates } : s)
+                };
+                setData(merged);
+                saveData(merged);
+                showToast('✅ Service updated!');
+            };
+
+            const deleteService = (id) => {
+                const merged = { ...data, services: data.services.filter(s => s.id !== id) };
+                setData(merged);
+                saveData(merged);
+                showToast('🗑️ Service deleted.');
+            };
+
+            const addGallery = (url) => {
+                const merged = { ...data, gallery: [...data.gallery, url] };
+                setData(merged);
+                saveData(merged);
+                showToast('✅ Image added to gallery!');
+            };
+
+            const removeGallery = (index) => {
+                const merged = { ...data, gallery: data.gallery.filter((_, i) => i !== index) };
+                setData(merged);
+                saveData(merged);
+                showToast('🗑️ Image removed.');
+            };
+
+            const login = (pass) => {
+                if (pass === adminPassword) {
+                    setIsAdmin(true);
+                    localStorage.setItem('tailorAdmin', 'true');
+                    showToast('🔐 Welcome Admin!');
+                    return true;
+                }
+                showToast('❌ Invalid password.');
+                return false;
+            };
+
+            const changePassword = (current, next, confirm) => {
+                if (current !== adminPassword) {
+                    showToast('❌ Current password is incorrect.');
+                    return false;
+                }
+                if (!next) {
+                    showToast('❌ Enter a new password.');
+                    return false;
+                }
+                if (next !== confirm) {
+                    showToast('❌ New passwords do not match.');
+                    return false;
+                }
+                setAdminPassword(next);
+                savePassword(next);
+                showToast('✅ Password changed successfully!');
+                return true;
+            };
+
+            const logout = () => {
+                setIsAdmin(false);
+                localStorage.removeItem('tailorAdmin');
+                showToast('👋 Logged out.');
+            };
+
+            const value = {
+                data,
+                isAdmin,
+                toast,
+                showToast,
+                updateData,
+                updateSection,
+                addService,
+                updateService,
+                deleteService,
+                addGallery,
+                removeGallery,
+                login,
+                logout,
+                changePassword,
+                setData
+            };
+
+            return React.createElement(AppContext.Provider, { value }, children);
+        };
+
+        const useApp = () => useContext(AppContext);
+
+        // ─── ICONS ──────────────────────────────────────────────────────────────
+        const Icons = {
+            WhatsApp: () => React.createElement('svg', { viewBox: '0 0 24 24' },
+                React.createElement('path', { d: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z' })
+            ),
+            Menu: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 28, height: 28, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M3 6h18M3 12h18M3 18h18' })
+            ),
+            Close: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 28, height: 28, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M6 6l12 12M18 6l-12 12' })
+            ),
+            Edit: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 18, height: 18, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z' })
+            ),
+            Delete: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 18, height: 18, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' })
+            ),
+            Plus: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M12 5v14M5 12h14' })
+            ),
+            Image: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('rect', { x: 3, y: 3, width: 18, height: 18, rx: 2 }),
+                React.createElement('circle', { cx: 8.5, cy: 8.5, r: 1.5 }),
+                React.createElement('path', { d: 'M21 15l-5-5L5 21' })
+            ),
+            Admin: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 16, height: 16, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2' }),
+                React.createElement('circle', { cx: 12, cy: 7, r: 4 })
+            ),
+            Location: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z' }),
+                React.createElement('circle', { cx: 12, cy: 10, r: 3 })
+            ),
+            Phone: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0122 16.92z' })
+            ),
+            Email: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('path', { d: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z' }),
+                React.createElement('polyline', { points: '22,6 12,13 2,6' })
+            ),
+            Clock: () => React.createElement('svg', { viewBox: '0 0 24 24', width: 20, height: 20, fill: 'none', stroke: 'currentColor', strokeWidth: 2 },
+                React.createElement('circle', { cx: 12, cy: 12, r: 10 }),
+                React.createElement('polyline', { points: '12 6 12 12 16 14' })
+            ),
+        };
+
+        // ─── TOAST ──────────────────────────────────────────────────────────────
+        const Toast = () => {
+            const { toast } = useApp();
+            if (!toast) return null;
+            return React.createElement('div', { className: 'toast' }, toast);
+        };
+
+        // ─── WHATSAPP BUTTON ──────────────────────────────────────────────────
+        const WhatsAppButton = () => {
+            const { data } = useApp();
+            const num = data.whatsapp || '03096893531';
+            const href = `https://wa.me/${num.replace(/\D/g, '')}?text=Hello!%20I%27m%20interested%20in%20your%20tailoring%20services.`;
+            return React.createElement('a', {
+                href,
+                target: '_blank',
+                rel: 'noopener noreferrer',
+                className: 'whatsapp-float',
+                'aria-label': 'Chat on WhatsApp'
+            }, React.createElement(Icons.WhatsApp, null));
+        };
+
+        // ─── NAVBAR ────────────────────────────────────────────────────────────
+        const Navbar = ({ currentPage, setPage }) => {
+            const { isAdmin, logout } = useApp();
+            const [mobileOpen, setMobileOpen] = useState(false);
+
+            const navItems = [
+                { key: 'home', label: 'Home' },
+                { key: 'services', label: 'Services' },
+                { key: 'about', label: 'About' },
+                { key: 'gallery', label: 'Gallery' },
+                { key: 'contact', label: 'Contact' },
+            ];
+
+            const NavLinks = ({ mobile = false }) => {
+                return navItems.map(item => {
+                    const active = currentPage === item.key;
+                    return React.createElement('a', {
+                        key: item.key,
+                        href: '#',
+                        onClick: (e) => {
+                            e.preventDefault();
+                            setPage(item.key);
+                            setMobileOpen(false);
+                        },
+                        className: mobile ? 'mobile-nav-link' : `nav-link ${active ? 'active' : ''}`
+                    }, item.label);
+                });
+            };
+
+            const AdminBadge = () => {
+                if (!isAdmin) return null;
+                return React.createElement('span', {
+                    className: 'admin-badge',
+                    onClick: () => { setPage('admin'); },
+                    style: { marginLeft: '8px' }
+                },
+                    React.createElement(Icons.Admin, null),
+                    'Admin'
+                );
+            };
+
+            return React.createElement(React.Fragment, null,
+                // Desktop Nav
+                React.createElement('nav', { className: 'px-4 md:px-8 py-4 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto flex items-center justify-between' },
+                        React.createElement('div', { className: 'flex items-center gap-2' },
+                            React.createElement('span', { className: 'text-2xl font-extrabold text-indigo-600 tracking-tight' }, 'TailorShop'),
+                            React.createElement(AdminBadge, null)
+                        ),
+                        React.createElement('div', { className: 'hidden md:flex items-center gap-6' },
+                            React.createElement(NavLinks, { mobile: false }),
+                            isAdmin && React.createElement('button', {
+                                onClick: logout,
+                                className: 'text-sm text-red-500 hover:text-red-600 font-medium px-3 py-1'
+                            }, 'Logout')
+                        ),
+                        React.createElement('button', {
+                            className: 'md:hidden p-2 rounded-lg hover:bg-gray-100',
+                            onClick: () => setMobileOpen(true)
+                        }, React.createElement(Icons.Menu, null))
+                    )
+                ),
+
+                // Mobile Menu
+                mobileOpen && React.createElement('div', { className: 'mobile-menu-overlay', onClick: () => setMobileOpen(false) }),
+                mobileOpen && React.createElement('div', { className: 'mobile-menu-panel' },
+                    React.createElement('button', { className: 'close-btn', onClick: () => setMobileOpen(false) }, '✕'),
+                    React.createElement('div', { className: 'mt-8' },
+                        React.createElement(NavLinks, { mobile: true }),
+                        isAdmin && React.createElement('div', { className: 'px-4 py-3 border-t border-gray-200 mt-2' },
+                            React.createElement('button', {
+                                onClick: () => {
+                                    setPage('admin');
+                                    setMobileOpen(false);
+                                },
+                                className: 'block w-full text-left py-2 font-medium text-indigo-600'
+                            }, '⚙️ Dashboard'),
+                            React.createElement('button', {
+                                onClick: () => {
+                                    logout();
+                                    setMobileOpen(false);
+                                },
+                                className: 'block w-full text-left py-2 font-medium text-red-500'
+                            }, '🚪 Logout')
+                        )
+                    )
+                )
+            );
+        };
+
+        // ─── HOME ──────────────────────────────────────────────────────────────
+        const Home = () => {
+            const { data, isAdmin, setPage } = useApp();
+            const hero = data.hero;
+
+            return React.createElement('div', null,
+                // Hero
+                React.createElement('section', { className: 'hero-gradient px-4 md:px-8 py-12 md:py-20' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10' },
+                        React.createElement('div', { className: 'flex-1 text-center md:text-left' },
+                            React.createElement('h1', { className: 'text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight' },
+                                hero.title
+                            ),
+                            React.createElement('p', { className: 'mt-4 text-lg md:text-xl text-gray-300 max-w-lg mx-auto md:mx-0' },
+                                hero.subtitle
+                            ),
+                            React.createElement('div', { className: 'mt-8 flex flex-wrap gap-4 justify-center md:justify-start' },
+                                React.createElement('a', {
+                                    href: '#',
+                                    onClick: (e) => {
+                                        e.preventDefault();
+                                        setPage('services');
+                                    },
+                                    className: 'bg-indigo-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200'
+                                }, 'Explore Services'),
+                                React.createElement('a', {
+                                    href: `https://wa.me/${data.whatsapp.replace(/\D/g, '')}`,
+                                    target: '_blank',
+                                    rel: 'noopener noreferrer',
+                                    className: 'bg-white text-gray-800 px-8 py-3 rounded-full font-semibold border border-gray-200 hover:border-indigo-300 transition shadow-sm'
+                                }, 'Chat on WhatsApp')
+                            ),
+                            isAdmin && React.createElement('div', { className: 'mt-6 flex gap-3 justify-center md:justify-start' },
+                                React.createElement('button', {
+                                    onClick: () => setPage('admin'),
+                                    className: 'text-sm bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-indigo-100 transition'
+                                }, '✏️ Edit Hero')
+                            )
+                        ),
+                        React.createElement('div', { className: 'flex-1 w-full max-w-lg' },
+                            React.createElement('img', {
+                                src: hero.image,
+                                alt: 'Tailor Shop',
+                                className: 'w-full h-auto rounded-3xl shadow-2xl object-cover max-h-[420px]',
+                                onError: (e) => { e.target.src = 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=800&h=500&fit=crop'; }
+                            })
+                        )
+                    )
+                ),
+
+                // Quick Services Preview
+                React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
+                    React.createElement('div', { className: 'text-center mb-12' },
+                        React.createElement('h2', { className: 'section-title' }, 'Our Services'),
+                        React.createElement('p', { className: 'section-sub mx-auto' }, 'Discover our range of premium tailoring services')
+                    ),
+                    React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' },
+                        data.services.slice(0, 3).map(s => React.createElement('div', { key: s.id, className: 'service-card p-6' },
+                            React.createElement('img', {
+                                src: s.image,
+                                alt: s.title,
+                                className: 'w-full h-48 object-cover rounded-xl',
+                                onError: (e) => { e.target.src = 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=300&fit=crop'; }
+                            }),
+                            React.createElement('h3', { className: 'text-xl font-bold mt-4 text-black' }, s.title),
+                            React.createElement('p', { className: 'text-black text-sm mt-1' }, s.description),
+                            React.createElement('p', { className: 'text-black font-bold mt-2' }, s.price)
+                        ))
+                    ),
+                    React.createElement('div', { className: 'text-center mt-10' },
+                        React.createElement('a', {
+                            href: '#services',
+                            onClick: (e) => {
+                                e.preventDefault();
+                                setPage('services');
+                            },
+                            className: 'text-white font-semibold hover:text-gray-200 underline'
+                        }, 'View All Services →')
+                    )
+                )
+            );
+        };
+
+        // ─── SERVICES ──────────────────────────────────────────────────────────
+        const Services = () => {
+            const { data, isAdmin, setPage } = useApp();
+            const { services } = data;
+
+            return React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
+                React.createElement('div', { className: 'flex flex-wrap items-center justify-between mb-12' },
+                    React.createElement('div',
+                        null,
+                        React.createElement('h2', { className: 'section-title' }, 'Our Services'),
+                        React.createElement('p', { className: 'section-sub' }, 'Premium tailoring for every occasion')
+                    ),
+                    isAdmin && React.createElement('button', {
+                        onClick: () => setPage('admin'),
+                        className: 'bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-md'
+                    }, '+ Manage Services')
+                ),
+                React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' },
+                    services.map(s => React.createElement('div', { key: s.id, className: 'service-card p-6' },
+                        React.createElement('img', {
+                            src: s.image,
+                            alt: s.title,
+                            className: 'w-full h-48 object-cover rounded-xl',
+                            onError: (e) => { e.target.src = 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=300&fit=crop'; }
+                        }),
+                        React.createElement('h3', { className: 'text-xl font-bold mt-4 text-black' }, s.title),
+                        React.createElement('p', { className: 'text-black text-sm mt-1' }, s.description),
+                        React.createElement('p', { className: 'text-black font-bold mt-2' }, s.price)
+                    ))
+                ),
+                services.length === 0 && React.createElement('div', { className: 'text-center py-12 text-gray-400' },
+                    'No services added yet. Admin can add services in the dashboard.'
+                )
+            );
+        };
+
+        // ─── ABOUT ─────────────────────────────────────────────────────────────
+        const About = () => {
+            const { data, isAdmin, setPage } = useApp();
+            const about = data.about;
+
+            return React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
+                React.createElement('div', { className: 'flex flex-col md:flex-row items-center gap-12' },
+                    React.createElement('div', { className: 'flex-1' },
+                        React.createElement('img', {
+                            src: about.image,
+                            alt: 'About us',
+                            className: 'w-full h-auto rounded-3xl shadow-xl object-cover max-h-[400px]',
+                            onError: (e) => { e.target.src = 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&h=400&fit=crop'; }
+                        })
+                    ),
+                    React.createElement('div', { className: 'flex-1' },
+                        React.createElement('h2', { className: 'section-title' }, about.title || 'About Our Tailor Shop'),
+                        React.createElement('p', { className: 'text-gray-600 text-lg leading-relaxed mt-4' },
+                            about.content || 'With over 15 years of experience, we specialize in bespoke tailoring for men and women.'
+                        ),
+                        isAdmin && React.createElement('button', {
+                            onClick: () => setPage('admin'),
+                            className: 'mt-6 text-sm bg-indigo-50 text-indigo-600 px-5 py-2.5 rounded-full font-medium hover:bg-indigo-100 transition'
+                        }, '✏️ Edit About Section')
+                    )
+                )
+            );
+        };
+
+        // ─── GALLERY ────────────────────────────────────────────────────────────
+        const Gallery = () => {
+            const { data, isAdmin, setPage } = useApp();
+            const { gallery } = data;
+
+            return React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
+                React.createElement('div', { className: 'flex flex-wrap items-center justify-between mb-12' },
+                    React.createElement('div',
+                        null,
+                        React.createElement('h2', { className: 'section-title' }, 'Our Gallery'),
+                        React.createElement('p', { className: 'section-sub' }, 'A glimpse of our craftsmanship')
+                    ),
+                    isAdmin && React.createElement('button', {
+                        onClick: () => setPage('admin'),
+                        className: 'bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-md'
+                    }, '+ Manage Gallery')
+                ),
+                React.createElement('div', { className: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' },
+                    gallery.map((url, idx) => React.createElement('div', { key: idx, className: 'overflow-hidden rounded-2xl shadow-md' },
+                        React.createElement('img', {
+                            src: url,
+                            alt: `Gallery ${idx + 1}`,
+                            className: 'gallery-img',
+                            onError: (e) => { e.target.src = 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=400&h=300&fit=crop'; }
+                        })
+                    ))
+                ),
+                gallery.length === 0 && React.createElement('div', { className: 'text-center py-12 text-gray-400' },
+                    'No images in gallery yet. Admin can add images in the dashboard.'
+                )
+            );
+        };
+
+        // ─── CONTACT ────────────────────────────────────────────────────────────
+        const Contact = () => {
+            const { data } = useApp();
+            const c = data.contact;
+            const whatsappNum = data.whatsapp || '03096893531';
+            const cleanNum = whatsappNum.replace(/\D/g, '');
+
+            return React.createElement('section', { className: 'px-4 md:px-8 py-16 max-w-7xl mx-auto' },
+                React.createElement('div', { className: 'text-center mb-12' },
+                    React.createElement('h2', { className: 'section-title' }, 'Contact Us'),
+                    React.createElement('p', { className: 'section-sub mx-auto' }, 'Get in touch with us for your tailoring needs')
+                ),
+                React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-8' },
+                    React.createElement('div', { className: 'bg-white rounded-3xl p-8 shadow-md border border-gray-100' },
+                        React.createElement('div', { className: 'space-y-6' },
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'bg-indigo-50 p-3 rounded-xl text-indigo-600' }, React.createElement(
+                                    Icons.Phone, null)),
+                                React.createElement('div',
+                                    null,
+                                    React.createElement('p', { className: 'text-sm text-black' }, 'Phone'),
+                                    React.createElement('p', { className: 'font-semibold text-black' }, c.phone || '03096893531')
+                                )
+                            ),
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'bg-indigo-50 p-3 rounded-xl text-indigo-600' }, React.createElement(
+                                    Icons.Email, null)),
+                                React.createElement('div',
+                                    null,
+                                    React.createElement('p', { className: 'text-sm text-black' }, 'Email'),
+                                    React.createElement('p', { className: 'font-semibold text-black' }, c.email || 'info@tailorshop.com')
+                                )
+                            ),
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'bg-indigo-50 p-3 rounded-xl text-indigo-600' }, React.createElement(
+                                    Icons.Location, null)),
+                                React.createElement('div',
+                                    null,
+                                    React.createElement('p', { className: 'text-sm text-black' }, 'Address'),
+                                    React.createElement('p', { className: 'font-semibold text-black' }, c.address ||
+                                        '123 Fashion Street, Karachi')
+                                )
+                            ),
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'bg-indigo-50 p-3 rounded-xl text-indigo-600' }, React.createElement(
+                                    Icons.Clock, null)),
+                                React.createElement('div',
+                                    null,
+                                    React.createElement('p', { className: 'text-sm text-black' }, 'Business Hours'),
+                                    React.createElement('p', { className: 'font-semibold text-black' }, c.hours ||
+                                        'Mon-Sat: 9:00 AM - 8:00 PM')
+                                )
+                            )
+                        ),
+                        React.createElement('a', {
+                            href: `https://wa.me/${cleanNum}?text=Hello!%20I%27m%20interested%20in%20your%20tailoring%20services.`,
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                            className: 'mt-8 w-full block text-center bg-green-500 text-white px-6 py-3.5 rounded-xl font-semibold hover:bg-green-600 transition shadow-lg shadow-green-200'
+                        }, '💬 Chat on WhatsApp')
+                    ),
+                    React.createElement('div', { className: 'bg-indigo-50 rounded-3xl p-8 flex flex-col items-center justify-center text-center' },
+                        React.createElement('div', { className: 'w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mb-4' },
+                            React.createElement('span', { className: 'text-3xl' }, '✂️')
+                        ),
+                        React.createElement('h3', { className: 'text-2xl font-bold text-gray-900' }, 'Ready to get started?'),
+                        React.createElement('p', { className: 'text-gray-600 mt-2 max-w-sm' },
+                            'Book your appointment today and experience the art of custom tailoring.'
+                        ),
+                        React.createElement('a', {
+                            href: `https://wa.me/${cleanNum}`,
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                            className: 'mt-6 bg-indigo-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200'
+                        }, 'Contact Now')
+                    )
+                )
+            );
+        };
+
+        // ─── ADMIN LOGIN ──────────────────────────────────────────────────────
+        const AdminLogin = () => {
+            const { login } = useApp();
+            const [pass, setPass] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                login(pass);
+                setPass('');
+            };
+
+            return React.createElement('div', { className: 'min-h-[70vh] flex items-center justify-center px-4' },
+                React.createElement('div', { className: 'bg-white rounded-3xl p-8 max-w-md w-full shadow-xl border border-gray-100' },
+                    React.createElement('div', { className: 'text-center mb-8' },
+                        React.createElement('span', { className: 'text-4xl' }, '🔐'),
+                        React.createElement('h2', { className: 'text-2xl font-bold text-black mt-2' }, 'Admin Login'),
+                        React.createElement('p', { className: 'text-black text-sm mt-1' }, 'Enter your password to manage the website')
+                    ),
+                    React.createElement('form', { onSubmit: handleSubmit },
+                        React.createElement('input', {
+                            type: 'password',
+                            placeholder: 'Enter admin password',
+                            className: 'admin-input',
+                            value: pass,
+                            onChange: (e) => setPass(e.target.value),
+                            required: true,
+                            autoFocus: true
+                        }),
+                        React.createElement('button', {
+                            type: 'submit',
+                            className: 'admin-btn admin-btn-primary w-full mt-4'
+                        }, 'Login')
+                    ),
+                    React.createElement('p', { className: 'text-center text-xs text-gray-400 mt-6' },
+
+                    )
+                )
+            );
+        };
+
+        // ─── ADMIN DASHBOARD ──────────────────────────────────────────────────
+        const AdminDashboard = () => {
+            const { data, isAdmin, updateSection, addService, updateService, deleteService, addGallery, removeGallery,
+                logout, showToast } = useApp();
+            const [activeTab, setActiveTab] = useState('hero');
+            const [editingService, setEditingService] = useState(null);
+            const [newService, setNewService] = useState({ title: '', description: '', price: '', image: '' });
+            const [galleryUrl, setGalleryUrl] = useState('');
+            const [heroEdit, setHeroEdit] = useState({
+                title: data.hero.title, subtitle: data.hero.subtitle, image: data.hero
+                    .image
+            });
+            const [aboutEdit, setAboutEdit] = useState({
+                title: data.about.title, content: data.about.content, image: data
+                    .about.image
+            });
+            const [securityEdit, setSecurityEdit] = useState({
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+
+            const handleHeroSave = () => {
+                updateSection('hero', heroEdit);
+            };
+
+            const handleAboutSave = () => {
+                updateSection('about', aboutEdit);
+            };
+
+            const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsDataURL(file);
+            });
+
+            const handleImageUpload = async (file, setter) => {
+                if (!file) return;
+                try {
+                    const dataUrl = await readFileAsDataUrl(file);
+                    setter(prev => ({ ...prev, image: dataUrl }));
+                    showToast('✅ Image uploaded successfully!');
+                } catch (_) {
+                    showToast('❌ Unable to read image file.');
+                }
+            };
+
+            const handleAddService = () => {
+                if (!newService.title || !newService.image) {
+                    showToast('⚠️ Please fill in title and image URL.');
+                    return;
+                }
+                addService(newService);
+                setNewService({ title: '', description: '', price: '', image: '' });
+            };
+
+            const handleUpdateService = (id) => {
+                if (!editingService.title || !editingService.image) {
+                    showToast('⚠️ Please fill in title and image URL.');
+                    return;
+                }
+                updateService(id, editingService);
+                setEditingService(null);
+            };
+
+            const handleAddGallery = () => {
+                if (!galleryUrl) {
+                    showToast('⚠️ Please enter an image URL.');
+                    return;
+                }
+                addGallery(galleryUrl);
+                setGalleryUrl('');
+            };
+
+            const handleChangePassword = () => {
+                if (changePassword(securityEdit.currentPassword, securityEdit.newPassword, securityEdit.confirmPassword)) {
+                    setSecurityEdit({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                }
+            };
+
+            const tabs = [
+                { key: 'hero', label: '🏠 Hero' },
+                { key: 'about', label: '📄 About' },
+                { key: 'services', label: '✂️ Services' },
+                { key: 'gallery', label: '🖼️ Gallery' },
+                { key: 'security', label: '🔒 Password' },
+            ];
+
+            return React.createElement('div', { className: 'min-h-screen bg-white px-4 py-6 text-black' },
+                React.createElement('div', { className: 'max-w-4xl mx-auto' },
+                    // Header
+                    React.createElement('div', { className: 'flex flex-wrap items-center justify-between gap-3 mb-6' },
+                        React.createElement('div',
+                            null,
+                            React.createElement('h1', { className: 'text-2xl font-extrabold text-black' }, '⚙️ Admin Dashboard'),
+                            React.createElement('p', { className: 'text-sm text-black' }, 'Manage your website content')
+                        ),
+                        React.createElement('button', {
+                            onClick: logout,
+                            className: 'text-red-500 hover:text-red-600 font-medium text-sm px-4 py-2 rounded-xl border border-red-200 hover:bg-red-50 transition'
+                        }, '🚪 Logout')
+                    ),
+
+                    // Tabs
+                    React.createElement('div', { className: 'flex flex-wrap gap-2 mb-6' },
+                        tabs.map(t => React.createElement('button', {
+                            key: t.key,
+                            onClick: () => setActiveTab(t.key),
+                            className: `px-4 py-2.5 rounded-xl font-medium text-sm transition ${activeTab === t.key ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-black hover:bg-gray-100'}`
+                        }, t.label))
+                    ),
+
+                    // Tab Content
+                    React.createElement('div', { className: 'bg-white rounded-3xl p-6 shadow-md border border-gray-100' },
+
+                        // Hero Tab
+                        activeTab === 'hero' && React.createElement('div', { className: 'space-y-4' },
+                            React.createElement('h2', { className: 'text-xl font-bold text-black' }, 'Edit Hero Section'),
+                            React.createElement('input', {
+                                className: 'admin-input',
+                                placeholder: 'Hero Title',
+                                value: heroEdit.title,
+                                onChange: (e) => setHeroEdit({ ...heroEdit, title: e.target.value })
+                            }),
+                            React.createElement('textarea', {
+                                className: 'admin-input min-h-[80px]',
+                                placeholder: 'Hero Subtitle',
+                                value: heroEdit.subtitle,
+                                onChange: (e) => setHeroEdit({ ...heroEdit, subtitle: e.target.value })
+                            }),
+                            React.createElement('div', { className: 'grid gap-3' },
+                                React.createElement('label', { className: 'text-sm text-black' }, 'Upload Hero Image'),
+                                React.createElement('input', {
+                                    type: 'file',
+                                    accept: 'image/*',
+                                    className: 'admin-input',
+                                    onChange: async (e) => {
+                                        const file = e.target.files && e.target.files[0];
+                                        await handleImageUpload(file, setHeroEdit);
+                                    }
+                                })
+                            ),
+                            React.createElement('input', {
+                                className: 'admin-input',
+                                placeholder: 'Hero Image URL (optional)',
+                                value: heroEdit.image,
+                                onChange: (e) => setHeroEdit({ ...heroEdit, image: e.target.value })
+                            }),
+                            React.createElement('button', {
+                                onClick: handleHeroSave,
+                                className: 'admin-btn admin-btn-primary'
+                            }, '💾 Save Hero')
+                        ),
+
+                        // About Tab
+                        activeTab === 'about' && React.createElement('div', { className: 'space-y-4' },
+                            React.createElement('h2', { className: 'text-xl font-bold text-black' }, 'Edit About Section'),
+                            React.createElement('input', {
+                                className: 'admin-input',
+                                placeholder: 'About Title',
+                                value: aboutEdit.title,
+                                onChange: (e) => setAboutEdit({ ...aboutEdit, title: e.target.value })
+                            }),
+                            React.createElement('textarea', {
+                                className: 'admin-input min-h-[100px]',
+                                placeholder: 'About Content',
+                                value: aboutEdit.content,
+                                onChange: (e) => setAboutEdit({ ...aboutEdit, content: e.target.value })
+                            }),
+                            React.createElement('div', { className: 'grid gap-3' },
+                                React.createElement('label', { className: 'text-sm text-black' }, 'Upload About Image'),
+                                React.createElement('input', {
+                                    type: 'file',
+                                    accept: 'image/*',
+                                    className: 'admin-input',
+                                    onChange: async (e) => {
+                                        const file = e.target.files && e.target.files[0];
+                                        await handleImageUpload(file, setAboutEdit);
+                                    }
+                                })
+                            ),
+                            React.createElement('input', {
+                                className: 'admin-input',
+                                placeholder: 'About Image URL (optional)',
+                                value: aboutEdit.image,
+                                onChange: (e) => setAboutEdit({ ...aboutEdit, image: e.target.value })
+                            }),
+                            React.createElement('button', {
+                                onClick: handleAboutSave,
+                                className: 'admin-btn admin-btn-primary'
+                            }, '💾 Save About')
+                        ),
+
+                        // Services Tab
+                        activeTab === 'services' && React.createElement('div', { className: 'space-y-6' },
+                            React.createElement('div',
+                                null,
+                                React.createElement('h2', { className: 'text-xl font-bold text-black' }, 'Manage Services'),
+                                React.createElement('p', { className: 'text-sm text-black' }, 'Add or edit services')
+                            ),
+
+                            // Add Service
+                            React.createElement('div', { className: 'bg-gray-50 rounded-2xl p-4 border border-gray-200' },
+                                React.createElement('h3', { className: 'font-semibold text-black mb-3' }, '➕ Add New Service'),
+                                React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-2 gap-3' },
+                                    React.createElement('input', {
+                                        className: 'admin-input',
+                                        placeholder: 'Title *',
+                                        value: newService.title,
+                                        onChange: (e) => setNewService({ ...newService, title: e.target.value })
+                                    }),
+                                    React.createElement('input', {
+                                        className: 'admin-input',
+                                        placeholder: 'Price (e.g. $299+)',
+                                        value: newService.price,
+                                        onChange: (e) => setNewService({ ...newService, price: e.target.value })
+                                    }),
+                                    React.createElement('input', {
+                                        className: 'admin-input sm:col-span-2',
+                                        placeholder: 'Description',
+                                        value: newService.description,
+                                        onChange: (e) => setNewService({ ...newService, description: e.target.value })
+                                    }),
+                                    React.createElement('div', { className: 'sm:col-span-2 grid gap-3' },
+                                        React.createElement('label', { className: 'text-sm text-black' }, 'Upload Service Image'),
+                                        React.createElement('input', {
+                                            type: 'file',
+                                            accept: 'image/*',
+                                            className: 'admin-input',
+                                            onChange: async (e) => {
+                                                const file = e.target.files && e.target.files[0];
+                                                if (!file) return;
+                                                const dataUrl = await readFileAsDataUrl(file);
+                                                setNewService({ ...newService, image: dataUrl });
+                                            }
+                                        })
+                                    ),
+                                    React.createElement('input', {
+                                        className: 'admin-input sm:col-span-2',
+                                        placeholder: 'Image URL *',
+                                        value: newService.image,
+                                        onChange: (e) => setNewService({ ...newService, image: e.target.value })
+                                    })
+                                ),
+                                React.createElement('button', {
+                                    onClick: handleAddService,
+                                    className: 'admin-btn admin-btn-success mt-3'
+                                }, '➕ Add Service')
+                            ),
+
+                            // Service List
+                            React.createElement('div', { className: 'space-y-3' },
+                                data.services.map(s => {
+                                    const isEditing = editingService && editingService.id === s.id;
+                                    return React.createElement('div', { key: s.id, className: 'bg-white rounded-xl p-4 border border-gray-200 flex flex-col gap-3' },
+                                        isEditing ?
+                                            React.createElement('div', { className: 'space-y-2' },
+                                                React.createElement('input', {
+                                                    className: 'admin-input',
+                                                    value: editingService.title,
+                                                    onChange: (e) => setEditingService({
+                                                        ...editingService,
+                                                        title: e.target.value
+                                                    })
+                                                }),
+                                                React.createElement('input', {
+                                                    className: 'admin-input',
+                                                    value: editingService.price,
+                                                    onChange: (e) => setEditingService({
+                                                        ...editingService,
+                                                        price: e.target.value
+                                                    })
+                                                }),
+                                                React.createElement('input', {
+                                                    className: 'admin-input',
+                                                    value: editingService.description,
+                                                    onChange: (e) => setEditingService({
+                                                        ...editingService,
+                                                        description: e.target.value
+                                                    })
+                                                }),
+                                                React.createElement('div', { className: 'grid gap-3' },
+                                                    React.createElement('label', { className: 'text-sm text-black' }, 'Upload Service Image'),
+                                                    React.createElement('input', {
+                                                        type: 'file',
+                                                        accept: 'image/*',
+                                                        className: 'admin-input',
+                                                        onChange: async (e) => {
+                                                            const file = e.target.files && e.target.files[0];
+                                                            await handleImageUpload(file, setEditingService);
+                                                        }
+                                                    })
+                                                ),
+                                                React.createElement('input', {
+                                                    className: 'admin-input',
+                                                    value: editingService.image,
+                                                    onChange: (e) => setEditingService({
+                                                        ...editingService,
+                                                        image: e.target.value
+                                                    })
+                                                }),
+                                                React.createElement('div', { className: 'flex gap-2' },
+                                                    React.createElement('button', {
+                                                        onClick: () => handleUpdateService(s.id),
+                                                        className: 'admin-btn admin-btn-primary text-sm py-2'
+                                                    }, '💾 Save'),
+                                                    React.createElement('button', {
+                                                        onClick: () => setEditingService(null),
+                                                        className: 'admin-btn admin-btn-outline text-sm py-2'
+                                                    }, 'Cancel')
+                                                )
+                                            ) :
+                                            React.createElement('div', { className: 'flex flex-wrap items-center justify-between gap-3' },
+                                                React.createElement('div', { className: 'flex-1 min-w-[160px]' },
+                                                    React.createElement('div', { className: 'flex items-center gap-3' },
+                                                        React.createElement('img', {
+                                                            src: s.image,
+                                                            alt: s.title,
+                                                            className: 'w-12 h-12 rounded-lg object-cover',
+                                                            onError: (e) => {
+                                                                e.target.src =
+                                                                    'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=100&h=100&fit=crop';
+                                                            }
+                                                        }),
+                                                        React.createElement('div',
+                                                            null,
+                                                            React.createElement('p', { className: 'font-semibold text-black' },
+                                                                s.title),
+                                                            React.createElement('p', { className: 'text-sm text-black' },
+                                                                s.price)
+                                                        )
+                                                    )
+                                                ),
+                                                React.createElement('div', { className: 'flex gap-2' },
+                                                    React.createElement('button', {
+                                                        onClick: () => setEditingService({ ...s }),
+                                                        className: 'text-indigo-600 hover:text-indigo-800 p-2 rounded-lg hover:bg-indigo-50 transition'
+                                                    }, React.createElement(Icons.Edit, null)),
+                                                    React.createElement('button', {
+                                                        onClick: () => deleteService(s.id),
+                                                        className: 'text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition'
+                                                    }, React.createElement(Icons.Delete, null))
+                                                )
+                                            )
+                                    );
+                                })
+                            ),
+                            data.services.length === 0 && React.createElement('p', { className: 'text-gray-400 text-center py-4' },
+                                'No services added yet.'
+                            )
+                        ),
+
+                        // Gallery Tab
+                        activeTab === 'gallery' && React.createElement('div', { className: 'space-y-4' },
+                            React.createElement('h2', { className: 'text-xl font-bold text-black' }, 'Manage Gallery'),
+                            React.createElement('div', { className: 'grid gap-3' },
+                                React.createElement('label', { className: 'text-sm text-black' }, 'Upload Gallery Image'),
+                                React.createElement('input', {
+                                    type: 'file',
+                                    accept: 'image/*',
+                                    className: 'admin-input',
+                                    onChange: async (e) => {
+                                        const file = e.target.files && e.target.files[0];
+                                        if (!file) return;
+                                        try {
+                                            const dataUrl = await readFileAsDataUrl(file);
+                                            addGallery(dataUrl);
+                                        } catch (_) {
+                                            showToast('❌ Unable to read image file.');
+                                        }
+                                    }
+                                }),
+                                React.createElement('div', { className: 'flex gap-3' },
+                                    React.createElement('input', {
+                                        className: 'admin-input flex-1',
+                                        placeholder: 'Image URL',
+                                        value: galleryUrl,
+                                        onChange: (e) => setGalleryUrl(e.target.value)
+                                    }),
+                                    React.createElement('button', {
+                                        onClick: handleAddGallery,
+                                        className: 'admin-btn admin-btn-primary whitespace-nowrap'
+                                    }, '➕ Add')
+                                )
+                            ),
+                            React.createElement('div', { className: 'grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4' },
+                                data.gallery.map((url, idx) => React.createElement('div', { key: idx, className: 'relative group rounded-xl overflow-hidden border border-gray-200' },
+                                    React.createElement('img', {
+                                        src: url,
+                                        alt: `Gallery ${idx + 1}`,
+                                        className: 'w-full h-28 object-cover',
+                                        onError: (e) => {
+                                            e.target.src =
+                                                'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=200&h=150&fit=crop';
+                                        }
+                                    }),
+                                    React.createElement('button', {
+                                        onClick: () => removeGallery(idx),
+                                        className: 'absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition opacity-0 group-hover:opacity-100'
+                                    }, '✕')
+                                ))
+                            ),
+                            data.gallery.length === 0 && React.createElement('p', { className: 'text-gray-400 text-center py-4' },
+                                'No images in gallery.'
+                            )
+                        ),
+
+                        activeTab === 'security' && React.createElement('div', { className: 'space-y-4' },
+                            React.createElement('h2', { className: 'text-xl font-bold text-black' }, 'Change Admin Password'),
+                            React.createElement('p', { className: 'text-sm text-black' }, 'Update the admin login password used to access the dashboard.'),
+                            React.createElement('input', {
+                                type: 'password',
+                                className: 'admin-input',
+                                placeholder: 'Current password',
+                                value: securityEdit.currentPassword,
+                                onChange: (e) => setSecurityEdit({ ...securityEdit, currentPassword: e.target.value })
+                            }),
+                            React.createElement('input', {
+                                type: 'password',
+                                className: 'admin-input',
+                                placeholder: 'New password',
+                                value: securityEdit.newPassword,
+                                onChange: (e) => setSecurityEdit({ ...securityEdit, newPassword: e.target.value })
+                            }),
+                            React.createElement('input', {
+                                type: 'password',
+                                className: 'admin-input',
+                                placeholder: 'Confirm new password',
+                                value: securityEdit.confirmPassword,
+                                onChange: (e) => setSecurityEdit({ ...securityEdit, confirmPassword: e.target.value })
+                            }),
+                            React.createElement('button', {
+                                onClick: handleChangePassword,
+                                className: 'admin-btn admin-btn-primary'
+                            }, '🔒 Change Password'),
+                            React.createElement('p', { className: 'text-sm text-black' }, 'Default password: admin123. Change it now for better security.')
+                        )
+                    ),
+
+                    // Tips
+                    React.createElement('div', { className: 'mt-6 bg-indigo-50 rounded-2xl p-4 border border-indigo-100' },
+                        React.createElement('p', { className: 'text-sm text-indigo-800' },
+                            '💡 Tip: Use high-quality image URLs from Unsplash, Imgur, or your own hosting. All changes are saved automatically to your browser\'s local storage.'
+                        )
+                    )
+                )
+            );
+        };
+
+        // ─── APP ──────────────────────────────────────────────────────────────
+        const App = () => {
+            const { isAdmin } = useApp();
+            const [page, setPage] = useState('home');
+
+            useEffect(() => {
+                // If admin and on admin page, stay there
+                // Otherwise render normally
+            }, [isAdmin]);
+
+            const renderPage = () => {
+                if (isAdmin && page === 'admin') {
+                    return React.createElement(AdminDashboard, null);
+                }
+                if (!isAdmin && page === 'admin') {
+                    return React.createElement(AdminLogin, null);
+                }
+                switch (page) {
+                    case 'home':
+                        return React.createElement(Home, null);
+                    case 'services':
+                        return React.createElement(Services, null);
+                    case 'about':
+                        return React.createElement(About, null);
+                    case 'gallery':
+                        return React.createElement(Gallery, null);
+                    case 'contact':
+                        return React.createElement(Contact, null);
+                    case 'admin':
+                        return React.createElement(AdminLogin, null);
+                    default:
+                        return React.createElement(Home, null);
+                }
+            };
+
+            // Check if we're in admin mode
+            const showAdmin = isAdmin && page === 'admin';
+
+            return React.createElement(React.Fragment, null,
+                !showAdmin && React.createElement(Navbar, { currentPage: page, setPage }),
+                React.createElement('main', { className: showAdmin ? 'min-h-[70vh] bg-white' : 'min-h-[70vh]' }, renderPage()),
+                React.createElement(WhatsAppButton, null),
+                React.createElement(Toast, null),
+                // Footer
+                !showAdmin && React.createElement('footer', { className: 'bg-white border-t border-gray-100 px-4 md:px-8 py-8 mt-12' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4' },
+                        React.createElement('p', { className: 'text-gray-500 text-sm' },
+                            '© 2026 StylishTailor. All rights reserved.'
+                        ),
+                        React.createElement('div', { className: 'flex items-center gap-4 text-sm text-gray-400' },
+                            React.createElement('span', null, '✂️ Premium Tailoring'),
+                            React.createElement('span', null, '•'),
+                            React.createElement('a', {
+                                href: '#',
+                                onClick: (e) => {
+                                    e.preventDefault();
+                                    setPage('admin');
+                                },
+                                className: 'text-indigo-400 hover:text-indigo-600 transition'
+                            }, 'Admin')
+                        )
+                    )
+                )
+            );
+        };
+
+        // ─── ROOT ──────────────────────────────────────────────────────────────
+        const Root = () => {
+            return React.createElement(AppProvider, null,
+                React.createElement(App, null)
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(Root, null));
+    </script>
+
+</body>
+
+</html>
